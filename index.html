@@ -10,6 +10,9 @@
             --primary-gold: #d4af37;
             --soft-white: #fcfaf7;
             --text-dark: #2c2c2c;
+            --bg-dark: #111625;
+            --ruby-red: #c0392b;
+            --accent-red: #e74c3c;
         }
 
         * {
@@ -39,13 +42,15 @@
             left: 0 !important;
             width: 100vw !important;
             height: 100vh !important;
-            background: #111625 !important;
+            background: var(--bg-dark) !important;
             z-index: 999999 !important;
             display: flex !important;
             flex-direction: column !important;
             align-items: center !important;
             justify-content: flex-start !important;
-            transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease-in-out;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         #rope-overlay.revealed {
@@ -55,13 +60,16 @@
         }
 
         .rope-instruction {
-            margin-top: 60px;
+            margin-top: 50px;
             color: #ffffff;
-            font-size: 1.5rem;
+            font-size: clamp(1.1rem, 2.5vw, 1.6rem);
             letter-spacing: 2px;
             text-align: center;
             pointer-events: none;
             z-index: 1000000;
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+            opacity: 0.9;
         }
 
         #pull-canvas {
@@ -76,6 +84,35 @@
 
         #pull-canvas:active {
             cursor: grabbing;
+        }
+
+        /* --- AUDIO CONTROLLER BUTTON --- */
+        #music-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 99999;
+            background: rgba(255, 255, 255, 0.85);
+            border: 2px solid var(--primary-gold);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        #music-toggle:hover {
+            transform: scale(1.1);
+            background: #ffffff;
+        }
+
+        #music-toggle span {
+            font-size: 1.3rem;
         }
 
         /* --- WEBSITE CONTENT STYLES --- */
@@ -98,6 +135,7 @@
             margin-bottom: 0.5rem;
             font-style: italic;
             letter-spacing: 3px;
+            color: var(--primary-gold);
         }
 
         .hero .subtitle {
@@ -263,20 +301,29 @@
             margin: 0 auto;
         }
 
-        .mini-moment-box img {
+        .mini-moment-box {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .placeholder-card {
             width: 100%;
-            aspect-ratio: 3 / 4; 
-            object-fit: cover;
-            border-radius: 12px 12px 0 0;
+            aspect-ratio: 3 / 4;
+            background: linear-gradient(135deg, #d4af37 0%, #16213e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
         }
 
         .mini-moment-label {
             padding: 15px;
             font-size: clamp(0.9rem, 2vw, 1.1rem); 
             color: var(--text-dark);
-            background: white;
-            border-radius: 0 0 12px 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
         }
 
         #gallery {
@@ -291,12 +338,18 @@
             margin-top: 30px;
         }
 
-        .gallery-grid img {
+        .gallery-card {
             width: 100%;
             height: 280px;
-            object-fit: cover;
+            background: linear-gradient(135deg, #2c2c2c, #1a1a2e);
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #d4af37;
+            font-size: 2rem;
+            border: 1px solid rgba(212, 175, 55, 0.2);
         }
 
         .rsvp-form {
@@ -349,21 +402,29 @@
 
     <!-- 1. FULLSCREEN PULL ROPE OVERLAY -->
     <div id="rope-overlay">
-        <div class="rope-instruction">Pull the gold ring down to enter ☟</div>
+        <div class="rope-instruction">Pull the heart down to reveal ☟</div>
         <canvas id="pull-canvas"></canvas>
     </div>
 
-    <!-- 2. FLOATING PETALS CONTAINER -->
+    <!-- 2. MUSIC CONTROL & AUDIO ELEMENT -->
+    <button id="music-toggle" title="Toggle Music" aria-label="Toggle Music">
+        <span id="music-icon">🎵</span>
+    </button>
+    <audio id="wedding-audio" loop preload="auto">
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-wedding-piano-112188.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- 3. FLOATING PETALS CONTAINER -->
     <div id="petal-container"></div>
 
-    <!-- 3. HERO SECTION -->
+    <!-- 4. HERO SECTION -->
     <header class="hero">    
         <h1>Our Story</h1>
         <div class="subtitle">Join us in celebrating our journey</div>
         <p>Save the Date</p>
     </header>
 
-    <!-- 4. COUNTDOWN SECTION -->
+    <!-- 5. COUNTDOWN SECTION -->
     <section id="countdown-section">
         <h2>Days until the Wedding</h2>
         <div id="countdown">
@@ -374,7 +435,7 @@
         </div>
     </section>
 
-    <!-- 5. LOCATION DETAILS SECTION -->
+    <!-- 6. LOCATION DETAILS SECTION -->
     <section id="location-details">
         <div class="details-container">
             <a href="https://maps.app.goo.gl/VaBfb3qn3Z6wrkBS7" target="_blank" class="location-card-link">
@@ -401,41 +462,30 @@
         </div>
     </section>
 
-    <!-- 6. MINI MOMENT SECTION -->
+    <!-- 7. MINI MOMENT SECTION -->
     <section id="special-note">
         <div class="mini-moment-container">
             <div class="mini-moment-box">
-                <img src="wedding (18).jpeg" alt="Food and Fun">
+                <div class="placeholder-card">🥂</div>
                 <div class="mini-moment-label">Food? No worries we got you covered 😉</div>
             </div>
         </div>
     </section>
 
-    <!-- 7. GALLERY SECTION -->
+    <!-- 8. GALLERY SECTION -->
     <section id="gallery">
         <h2>Captured Moments</h2>
         <div class="gallery-grid">
-            <img src="wedding (1).jpeg" alt="Moment 1">
-            <img src="wedding (2).jpeg" alt="Moment 2">
-            <img src="wedding (3).jpeg" alt="Moment 3">
-            <img src="wedding (4).jpeg" alt="Moment 4">
-            <img src="wedding (5).jpeg" alt="Moment 5">
-            <img src="wedding (6).jpeg" alt="Moment 6">
-            <img src="wedding (7).jpeg" alt="Moment 7">
-            <img src="wedding (8).jpeg" alt="Moment 8">
-            <img src="wedding (9).jpeg" alt="Moment 9">
-            <img src="wedding (10).jpeg" alt="Moment 10">
-            <img src="wedding (11).jpeg" alt="Moment 11">
-            <img src="wedding (12).jpeg" alt="Moment 12">
-            <img src="wedding (13).jpeg" alt="Moment 13">
-            <img src="wedding (14).jpeg" alt="Moment 14">
-            <img src="wedding (15).jpeg" alt="Moment 15">
-            <img src="wedding (16).jpeg" alt="Moment 16">
-            <img src="wedding (17).jpeg" alt="Moment 17">
+            <div class="gallery-card">💖</div>
+            <div class="gallery-card">💍</div>
+            <div class="gallery-card">✨</div>
+            <div class="gallery-card">🕊️</div>
+            <div class="gallery-card">🌸</div>
+            <div class="gallery-card">🥂</div>
         </div>
     </section>
 
-    <!-- 8. RSVP SECTION -->
+    <!-- 9. RSVP SECTION -->
     <section id="rsvp">
         <h2>Will You Join Us?</h2>
         <form class="rsvp-form" id="rsvpForm">
@@ -449,52 +499,67 @@
         </form>
     </section>
 
-    <!-- 9. FOOTER -->
+    <!-- 10. FOOTER -->
     <footer>
         <p>Created with Love &copy; 2026</p>
     </footer>
 
-    <!-- JAVASCRIPT -->
     <script>
         window.addEventListener('load', () => {
-            // 1. PULL ROPE PHYSICS ENGINE
             const canvas = document.getElementById('pull-canvas');
             const overlay = document.getElementById('rope-overlay');
+            const audio = document.getElementById('wedding-audio');
+            const musicToggle = document.getElementById('music-toggle');
+            const musicIcon = document.getElementById('music-icon');
 
+            let isAudioPlaying = false;
+
+            // Function to safely play audio on user interaction
+            function playMusic() {
+                if (audio && !isAudioPlaying) {
+                    audio.play().then(() => {
+                        isAudioPlaying = true;
+                        if (musicIcon) musicIcon.innerText = '🎵';
+                    }).catch(err => {
+                        console.log('Audio playback prevented or waiting for interaction:', err);
+                    });
+                }
+            }
+
+            // Music Mute/Unmute Toggle Button
+            if (musicToggle) {
+                musicToggle.addEventListener('click', () => {
+                    if (isAudioPlaying) {
+                        audio.pause();
+                        isAudioPlaying = false;
+                        musicIcon.innerText = '🔇';
+                    } else {
+                        audio.play();
+                        isAudioPlaying = true;
+                        musicIcon.innerText = '🎵';
+                    }
+                });
+            }
+
+            // --- RED SMALL HEART ROPE PHYSICS ENGINE ---
             if (canvas && overlay) {
                 const ctx = canvas.getContext('2d');
                 let width = 0, height = 0;
                 let isDragging = false;
+                let startDragY = 0;
 
-                let points = [];
-                const numPoints = 20;
-                let baseRopeLength = 300;
-                let currentPullY = 0;
-                const pullThreshold = 160;
+                let offsetY = 0;
+                let targetOffsetY = 0;
+                let velocityY = 0;
+
+                const pullThreshold = 180; // Distance to pull down to unlock
 
                 function resize() {
                     width = canvas.width = window.innerWidth || document.documentElement.clientWidth || 800;
                     height = canvas.height = window.innerHeight || document.documentElement.clientHeight || 600;
-                    baseRopeLength = Math.min(height * 0.45, 350);
-                    initRope();
                 }
 
-                function initRope() {
-                    points = [];
-                    const startX = width / 2;
-                    const segmentLen = baseRopeLength / numPoints;
-
-                    for (let i = 0; i <= numPoints; i++) {
-                        points.push({
-                            x: startX,
-                            y: i * segmentLen,
-                            vx: 0,
-                            vy: 0
-                        });
-                    }
-                }
-
-                function getPointer(e) {
+                function getPointerPos(e) {
                     const rect = canvas.getBoundingClientRect();
                     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -502,96 +567,145 @@
                 }
 
                 function onStart(e) {
-                    const pos = getPointer(e);
-                    const handle = points[points.length - 1];
-                    const dist = Math.hypot(pos.x - handle.x, pos.y - handle.y);
-                    if (dist < 100) {
+                    const pos = getPointerPos(e);
+                    const centerX = width / 2;
+                    if (Math.abs(pos.x - centerX) < 120 && pos.y > 0 && pos.y < height * 0.75) {
                         isDragging = true;
+                        startDragY = pos.y - offsetY;
                     }
                 }
 
                 function onMove(e) {
                     if (!isDragging) return;
-                    const pos = getPointer(e);
-                    const handle = points[points.length - 1];
+                    const pos = getPointerPos(e);
+                    targetOffsetY = Math.max(0, pos.y - startDragY);
 
-                    handle.x = pos.x;
-                    handle.y = Math.max(pos.y, baseRopeLength);
-
-                    currentPullY = handle.y - baseRopeLength;
-
-                    if (currentPullY > pullThreshold) {
+                    if (targetOffsetY > pullThreshold) {
                         revealWebsite();
                     }
                 }
 
                 function onEnd() {
                     isDragging = false;
-                    currentPullY = 0;
+                    targetOffsetY = 0;
                 }
 
-                function updateRope() {
-                    const stiffness = 0.15;
-                    const damping = 0.75;
-                    const startX = width / 2;
-
-                    points[0].x = startX;
-                    points[0].y = 0;
-
-                    for (let i = 1; i < points.length; i++) {
-                        const p = points[i];
-                        if (i === points.length - 1 && isDragging) continue;
-
-                        const targetX = startX;
-                        const targetY = (i / numPoints) * baseRopeLength;
-
-                        p.vx = (p.vx + (targetX - p.x) * stiffness) * damping;
-                        p.vy = (p.vy + (targetY - p.y) * stiffness) * damping;
-
-                        p.x += p.vx;
-                        p.y += p.vy;
+                // Generates smooth parametric points for a clean rope heart
+                function getHeartPoints(cx, cy, scale) {
+                    const points = [];
+                    const totalPoints = 60;
+                    for (let i = 0; i <= totalPoints; i++) {
+                        const t = (i / totalPoints) * Math.PI * 2;
+                        const x = 16 * Math.pow(Math.sin(t), 3);
+                        const y = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+                        points.push({
+                            x: cx + x * scale,
+                            y: cy + y * scale
+                        });
                     }
+                    return points;
                 }
 
-                function drawRope() {
-                    ctx.clearRect(0, 0, width, height);
-
-                    // Outer Rope Strand
+                function drawRopePath(points) {
+                    if (points.length === 0) return;
                     ctx.beginPath();
                     ctx.moveTo(points[0].x, points[0].y);
                     for (let i = 1; i < points.length; i++) {
                         ctx.lineTo(points[i].x, points[i].y);
                     }
-                    ctx.lineWidth = 14;
-                    ctx.strokeStyle = '#d4af37';
+                    ctx.closePath();
+
+                    // Outer Crimson Red Rope
+                    ctx.lineWidth = 10;
+                    ctx.strokeStyle = '#c0392b';
                     ctx.lineCap = 'round';
                     ctx.lineJoin = 'round';
                     ctx.stroke();
 
-                    // Inner Highlight Thread
-                    ctx.lineWidth = 4;
-                    ctx.strokeStyle = '#ffffff';
+                    // Inner Bright Red Highlight Strand
+                    ctx.lineWidth = 3;
+                    ctx.strokeStyle = '#ff7675';
+                    ctx.stroke();
+                }
+
+                function drawSolidRopeSystem() {
+                    ctx.clearRect(0, 0, width, height);
+
+                    const cx = width / 2;
+                    const topY = 0;
+                    // Smaller scale for compact red heart
+                    const scale = Math.min(width, height) < 600 ? 3.5 : 4.5;
+                    const heartCenterY = 160 + offsetY;
+
+                    // 1. Top Hanging Ropes
+                    ctx.beginPath();
+                    ctx.moveTo(cx - 8, topY);
+                    ctx.lineTo(cx - 8, heartCenterY - 14 * scale);
+                    ctx.moveTo(cx + 8, topY);
+                    ctx.lineTo(cx + 8, heartCenterY - 14 * scale);
+                    ctx.lineWidth = 6;
+                    ctx.strokeStyle = '#c0392b';
                     ctx.stroke();
 
-                    // Bottom Gold Ring
-                    const handle = points[points.length - 1];
                     ctx.beginPath();
-                    ctx.arc(handle.x, handle.y, 25, 0, Math.PI * 2);
+                    ctx.moveTo(cx - 8, topY);
+                    ctx.lineTo(cx - 8, heartCenterY - 14 * scale);
+                    ctx.moveTo(cx + 8, topY);
+                    ctx.lineTo(cx + 8, heartCenterY - 14 * scale);
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = '#ff7675';
+                    ctx.stroke();
+
+                    // 2. Heart Shape Rope
+                    const heartPoints = getHeartPoints(cx, heartCenterY, scale);
+                    drawRopePath(heartPoints);
+
+                    // 3. Top Knot Details
+                    ctx.beginPath();
+                    ctx.arc(cx, heartCenterY - 14 * scale, 8, 0, Math.PI * 2);
+                    ctx.fillStyle = '#c0392b';
+                    ctx.fill();
+                    ctx.lineWidth = 2;
+                    ctx.strokeStyle = '#ff7675';
+                    ctx.stroke();
+
+                    // 4. Bottom Knot & Pull Ring
+                    const bottomHeartY = heartCenterY + 16 * scale;
+                    
+                    // Rope tail
+                    ctx.beginPath();
+                    ctx.moveTo(cx, bottomHeartY);
+                    ctx.lineTo(cx, bottomHeartY + 20);
+                    ctx.lineWidth = 8;
+                    ctx.strokeStyle = '#c0392b';
+                    ctx.stroke();
+
+                    // Gold Ring
+                    const ringY = bottomHeartY + 38;
+                    ctx.beginPath();
+                    ctx.arc(cx, ringY, 18, 0, Math.PI * 2);
                     ctx.fillStyle = '#d4af37';
                     ctx.fill();
-                    ctx.lineWidth = 5;
+                    ctx.lineWidth = 3;
                     ctx.strokeStyle = '#ffffff';
                     ctx.stroke();
 
                     ctx.beginPath();
-                    ctx.arc(handle.x, handle.y, 10, 0, Math.PI * 2);
+                    ctx.arc(cx, ringY, 8, 0, Math.PI * 2);
                     ctx.fillStyle = '#111625';
                     ctx.fill();
                 }
 
                 function animate() {
-                    updateRope();
-                    drawRope();
+                    if (!isDragging) {
+                        const springForce = (targetOffsetY - offsetY) * 0.15;
+                        velocityY = (velocityY + springForce) * 0.75;
+                        offsetY += velocityY;
+                    } else {
+                        offsetY = targetOffsetY;
+                    }
+
+                    drawSolidRopeSystem();
                     requestAnimationFrame(animate);
                 }
 
@@ -599,6 +713,7 @@
                     isDragging = false;
                     overlay.classList.add('revealed');
                     document.body.classList.remove('rope-locked');
+                    playMusic(); // Trigger romantic music playback when rope is pulled down!
                 }
 
                 window.addEventListener('resize', resize);
@@ -606,15 +721,15 @@
                 window.addEventListener('mousemove', onMove);
                 window.addEventListener('mouseup', onEnd);
 
-                canvas.addEventListener('touchstart', onStart);
-                window.addEventListener('touchmove', onMove);
+                canvas.addEventListener('touchstart', onStart, { passive: true });
+                window.addEventListener('touchmove', onMove, { passive: true });
                 window.addEventListener('touchend', onEnd);
 
                 resize();
                 animate();
             }
 
-            // 2. COUNTDOWN LOGIC
+            // --- COUNTDOWN LOGIC ---
             const weddingDate = new Date("April 16, 2026 15:00:00").getTime();
             setInterval(function() {
                 const now = new Date().getTime();
@@ -633,7 +748,7 @@
                 }
             }, 1000);
 
-            // 3. FLOATING PETALS LOGIC
+            // --- FLOATING PETALS LOGIC ---
             function createPetal() {
                 const container = document.getElementById('petal-container');
                 if (!container) return;
@@ -648,7 +763,7 @@
             }
             setInterval(createPetal, 400);
 
-            // 4. RSVP FORM HANDLER
+            // --- RSVP FORM LOGIC ---
             const rsvpForm = document.getElementById('rsvpForm');
             if (rsvpForm) {
                 rsvpForm.addEventListener('submit', function(e) {
