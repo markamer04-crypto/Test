@@ -5,6 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Wedding Day</title>
 
+    <!-- Google Fonts & Swiper CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
     <style>
         :root {
             --primary-gold: #d4af37;
@@ -18,10 +22,10 @@
             box-sizing: border-box;
         }
 
-        html, body {
+        body, html {
             width: 100%;
             height: 100%;
-            font-family: Georgia, 'Times New Roman', serif;
+            font-family: 'Lato', sans-serif;
             color: var(--text-dark);
             background-color: var(--soft-white);
             scroll-behavior: smooth;
@@ -32,44 +36,52 @@
             overflow: hidden !important;
         }
 
-        /* --- PULL ROPE FULLSCREEN OVERLAY --- */
+        /* --- FULLSCREEN ROPE OVERLAY COVER --- */
         #rope-overlay {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            background: #111625 !important;
-            z-index: 999999 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: flex-start !important;
-            transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #111625;
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
         }
 
         #rope-overlay.revealed {
-            transform: translateY(-100vh) !important;
-            opacity: 0 !important;
-            pointer-events: none !important;
+            transform: translateY(-100vh);
+            opacity: 0;
+            pointer-events: none;
         }
 
         .rope-instruction {
-            margin-top: 60px;
+            margin-top: 80px;
             color: #ffffff;
+            font-family: 'Playfair Display', serif;
             font-size: 1.5rem;
             letter-spacing: 2px;
             text-align: center;
             pointer-events: none;
-            z-index: 1000000;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            animation: pulseText 2s infinite alternate;
         }
 
+        @keyframes pulseText {
+            0% { opacity: 0.6; transform: translateY(0); }
+            100% { opacity: 1; transform: translateY(-5px); }
+        }
+
+        /* Pull Rope Canvas */
         #pull-canvas {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            width: 100% !important;
-            height: 100% !important;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             cursor: grab;
             touch-action: none;
         }
@@ -94,6 +106,7 @@
         }
 
         .hero h1 {
+            font-family: 'Playfair Display', serif;
             font-size: clamp(2.5rem, 8vw, 5rem);
             margin-bottom: 0.5rem;
             font-style: italic;
@@ -102,6 +115,7 @@
 
         .hero .subtitle {
             font-size: clamp(1rem, 3vw, 1.5rem);
+            font-family: 'Playfair Display', serif;
             margin-bottom: 2rem;
             font-weight: 300;
         }
@@ -148,6 +162,7 @@
         }
 
         h2 {
+            font-family: 'Playfair Display', serif;
             font-size: clamp(2rem, 5vw, 2.8rem);
             color: var(--primary-gold);
             margin-bottom: 40px;
@@ -183,6 +198,7 @@
         .time-box span {
             display: block;
             font-size: 2.5rem;
+            font-family: 'Playfair Display', serif;
             font-weight: bold;
             color: var(--primary-gold);
         }
@@ -233,6 +249,7 @@
         }
 
         .location-card h3 {
+            font-family: 'Playfair Display', serif;
             color: var(--primary-gold);
             margin-bottom: 10px;
             font-size: 1.6rem;
@@ -272,6 +289,7 @@
 
         .mini-moment-label {
             padding: 15px;
+            font-family: 'Playfair Display', serif;
             font-size: clamp(0.9rem, 2vw, 1.1rem); 
             color: var(--text-dark);
             background: white;
@@ -279,25 +297,21 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
-        /* --- PHOTO GALLERY GRID --- */
         #gallery {
             background: #f9f7f4;
             width: 100%;
         }
 
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin-top: 30px;
+        .swiper-slide {
+            width: 300px;
+            height: 400px;
         }
 
-        .gallery-grid img {
+        .swiper-slide img {
             width: 100%;
-            height: 280px;
+            height: 100%;
             object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-radius: 15px;
         }
 
         .rsvp-form {
@@ -316,6 +330,7 @@
             margin: 12px 0;
             border: 1px solid #e1e1e1;
             border-radius: 8px;
+            font-family: 'Lato', sans-serif;
             font-size: 1rem;
             outline: none;
         }
@@ -328,6 +343,7 @@
             color: white;
             border: none;
             border-radius: 8px;
+            font-family: 'Lato', sans-serif;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
@@ -350,7 +366,7 @@
 
     <!-- OVERLAY WITH PULLABLE ROPE -->
     <div id="rope-overlay">
-        <div class="rope-instruction">Pull the gold ring down to enter ☟</div>
+        <div class="rope-instruction">Pull the rope down to open ☟</div>
         <canvas id="pull-canvas"></canvas>
     </div>
 
@@ -415,24 +431,27 @@
     <!-- GALLERY SECTION -->
     <section id="gallery">
         <h2>Captured Moments</h2>
-        <div class="gallery-grid">
-            <img src="wedding (1).jpeg" alt="Moment 1">
-            <img src="wedding (2).jpeg" alt="Moment 2">
-            <img src="wedding (3).jpeg" alt="Moment 3">
-            <img src="wedding (4).jpeg" alt="Moment 4">
-            <img src="wedding (5).jpeg" alt="Moment 5">
-            <img src="wedding (6).jpeg" alt="Moment 6">
-            <img src="wedding (7).jpeg" alt="Moment 7">
-            <img src="wedding (8).jpeg" alt="Moment 8">
-            <img src="wedding (9).jpeg" alt="Moment 9">
-            <img src="wedding (10).jpeg" alt="Moment 10">
-            <img src="wedding (11).jpeg" alt="Moment 11">
-            <img src="wedding (12).jpeg" alt="Moment 12">
-            <img src="wedding (13).jpeg" alt="Moment 13">
-            <img src="wedding (14).jpeg" alt="Moment 14">
-            <img src="wedding (15).jpeg" alt="Moment 15">
-            <img src="wedding (16).jpeg" alt="Moment 16">
-            <img src="wedding (17).jpeg" alt="Moment 17">
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide"><img src="wedding (1).jpeg" alt="Moment 1"></div>
+                <div class="swiper-slide"><img src="wedding (2).jpeg" alt="Moment 2"></div>
+                <div class="swiper-slide"><img src="wedding (3).jpeg" alt="Moment 3"></div>
+                <div class="swiper-slide"><img src="wedding (4).jpeg" alt="Moment 4"></div>
+                <div class="swiper-slide"><img src="wedding (5).jpeg" alt="Moment 5"></div>
+                <div class="swiper-slide"><img src="wedding (6).jpeg" alt="Moment 6"></div>
+                <div class="swiper-slide"><img src="wedding (7).jpeg" alt="Moment 7"></div>
+                <div class="swiper-slide"><img src="wedding (8).jpeg" alt="Moment 8"></div>
+                <div class="swiper-slide"><img src="wedding (9).jpeg" alt="Moment 9"></div>
+                <div class="swiper-slide"><img src="wedding (10).jpeg" alt="Moment 10"></div>
+                <div class="swiper-slide"><img src="wedding (11).jpeg" alt="Moment 11"></div>
+                <div class="swiper-slide"><img src="wedding (12).jpeg" alt="Moment 12"></div>
+                <div class="swiper-slide"><img src="wedding (13).jpeg" alt="Moment 13"></div>
+                <div class="swiper-slide"><img src="wedding (14).jpeg" alt="Moment 14"></div>
+                <div class="swiper-slide"><img src="wedding (15).jpeg" alt="Moment 15"></div>
+                <div class="swiper-slide"><img src="wedding (16).jpeg" alt="Moment 16"></div>
+                <div class="swiper-slide"><img src="wedding (17).jpeg" alt="Moment 17"></div>
+            </div>
+            <div class="swiper-pagination"></div>
         </div>
     </section>
 
@@ -454,40 +473,44 @@
         <p>Created with Love &copy; 2026</p>
     </footer>
 
-    <!-- JAVASCRIPT -->
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+    <!-- ALL JAVASCRIPT -->
     <script>
-        (function initWebsite() {
-            // 1. PULL ROPE OVERLAY LOGIC
+        window.addEventListener('load', () => {
+            // --- 1. DOWNWARD PULL ROPE PHYSICS LOGIC ---
             const canvas = document.getElementById('pull-canvas');
             const overlay = document.getElementById('rope-overlay');
-
             if (canvas && overlay) {
                 const ctx = canvas.getContext('2d');
-                let width = 0, height = 0;
+                let width, height;
                 let isDragging = false;
 
+                // Physics points for the hanging rope
                 let points = [];
-                const numPoints = 20;
-                let baseRopeLength = 300;
+                const numPoints = 25;
+                const ropeLength = 350; // Base length in px
                 let currentPullY = 0;
-                const pullThreshold = 160;
+                const pullThreshold = 220; // How many px user pulls down to release
 
                 function resize() {
-                    width = canvas.width = window.innerWidth || 800;
-                    height = canvas.height = window.innerHeight || 600;
-                    baseRopeLength = Math.min(height * 0.45, 350);
+                    width = canvas.width = window.innerWidth;
+                    height = canvas.height = window.innerHeight;
                     initRope();
                 }
 
                 function initRope() {
                     points = [];
                     const startX = width / 2;
-                    const segmentLen = baseRopeLength / numPoints;
+                    const segmentLen = ropeLength / numPoints;
 
                     for (let i = 0; i <= numPoints; i++) {
                         points.push({
                             x: startX,
                             y: i * segmentLen,
+                            ox: startX,
+                            oy: i * segmentLen,
                             vx: 0,
                             vy: 0
                         });
@@ -504,8 +527,9 @@
                 function onStart(e) {
                     const pos = getPointer(e);
                     const handle = points[points.length - 1];
+                    // Check if click/tap is near the bottom handle ring
                     const dist = Math.hypot(pos.x - handle.x, pos.y - handle.y);
-                    if (dist < 100) {
+                    if (dist < 80) {
                         isDragging = true;
                     }
                 }
@@ -516,10 +540,11 @@
                     const handle = points[points.length - 1];
 
                     handle.x = pos.x;
-                    handle.y = Math.max(pos.y, baseRopeLength);
+                    handle.y = Math.max(pos.y, ropeLength); // Only allow pulling downward
 
-                    currentPullY = handle.y - baseRopeLength;
+                    currentPullY = handle.y - ropeLength;
 
+                    // Trigger reveal when pulled down past threshold
                     if (currentPullY > pullThreshold) {
                         revealWebsite();
                     }
@@ -535,6 +560,7 @@
                     const damping = 0.75;
                     const startX = width / 2;
 
+                    // Anchor the top of the rope to top-center of page
                     points[0].x = startX;
                     points[0].y = 0;
 
@@ -542,8 +568,9 @@
                         const p = points[i];
                         if (i === points.length - 1 && isDragging) continue;
 
+                        // Spring back to resting vertical line
                         const targetX = startX;
-                        const targetY = (i / numPoints) * baseRopeLength;
+                        const targetY = (i / numPoints) * ropeLength;
 
                         p.vx = (p.vx + (targetX - p.x) * stiffness) * damping;
                         p.vy = (p.vy + (targetY - p.y) * stiffness) * damping;
@@ -563,7 +590,7 @@
                         ctx.lineTo(points[i].x, points[i].y);
                     }
                     ctx.lineWidth = 14;
-                    ctx.strokeStyle = '#d4af37';
+                    ctx.strokeStyle = '#d4af37'; // Gold rope
                     ctx.lineCap = 'round';
                     ctx.lineJoin = 'round';
                     ctx.stroke();
@@ -573,19 +600,20 @@
                     ctx.strokeStyle = '#ffffff';
                     ctx.stroke();
 
-                    // Draw Ring Handle at Bottom
+                    // Draw Handle Ring/Knob at bottom end
                     const handle = points[points.length - 1];
                     ctx.beginPath();
-                    ctx.arc(handle.x, handle.y, 25, 0, Math.PI * 2);
+                    ctx.arc(handle.x, handle.y, 22, 0, Math.PI * 2);
                     ctx.fillStyle = '#d4af37';
                     ctx.fill();
-                    ctx.lineWidth = 5;
+                    ctx.lineWidth = 4;
                     ctx.strokeStyle = '#ffffff';
                     ctx.stroke();
 
+                    // Inner decorative core of handle
                     ctx.beginPath();
-                    ctx.arc(handle.x, handle.y, 10, 0, Math.PI * 2);
-                    ctx.fillStyle = '#111625';
+                    ctx.arc(handle.x, handle.y, 8, 0, Math.PI * 2);
+                    ctx.fillStyle = '#ffffff';
                     ctx.fill();
                 }
 
@@ -614,7 +642,7 @@
                 animate();
             }
 
-            // 2. COUNTDOWN LOGIC
+            // --- 2. COUNTDOWN LOGIC ---
             const weddingDate = new Date("April 16, 2026 15:00:00").getTime();
             setInterval(function() {
                 const now = new Date().getTime();
@@ -633,7 +661,26 @@
                 }
             }, 1000);
 
-            // 3. FLOATING PETALS LOGIC
+            // --- 3. SWIPER SLIDER LOGIC ---
+            new Swiper('.swiper', {
+                effect: 'coverflow',
+                grabCursor: true,
+                centeredSlides: true,
+                slidesPerView: 'auto',
+                coverflowEffect: {
+                    rotate: 50,
+                    stretch: 0,
+                    depth: 100,
+                    modifier: 1,
+                    slideShadows: true,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                },
+            });
+
+            // --- 4. FLOATING PETALS LOGIC ---
             function createPetal() {
                 const container = document.getElementById('petal-container');
                 if (!container) return;
@@ -648,7 +695,7 @@
             }
             setInterval(createPetal, 400);
 
-            // 4. RSVP FORM
+            // --- 5. RSVP FORM HANDLER ---
             const rsvpForm = document.getElementById('rsvpForm');
             if (rsvpForm) {
                 rsvpForm.addEventListener('submit', function(e) {
@@ -658,7 +705,7 @@
                     rsvpForm.reset();
                 });
             }
-        })();
+        });
     </script>
 </body>
 </html>
