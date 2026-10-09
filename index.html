@@ -60,7 +60,7 @@
         }
 
         .rope-instruction {
-            margin-top: 50px;
+            margin-top: 40px;
             color: #ffffff;
             font-size: clamp(1.1rem, 2.5vw, 1.6rem);
             letter-spacing: 2px;
@@ -70,6 +70,7 @@
             font-family: 'Times New Roman', serif;
             font-style: italic;
             opacity: 0.9;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
         #pull-canvas {
@@ -411,6 +412,7 @@
         <span id="music-icon">🎵</span>
     </button>
     <audio id="wedding-audio" loop preload="auto">
+        <source src="music.mp3" type="audio/mpeg">
         <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-wedding-piano-112188.mp3" type="audio/mpeg">
     </audio>
 
@@ -514,19 +516,19 @@
 
             let isAudioPlaying = false;
 
-            // Function to safely play audio on user interaction
+            // Safe audio player
             function playMusic() {
                 if (audio && !isAudioPlaying) {
                     audio.play().then(() => {
                         isAudioPlaying = true;
                         if (musicIcon) musicIcon.innerText = '🎵';
                     }).catch(err => {
-                        console.log('Audio playback prevented or waiting for interaction:', err);
+                        console.log('Audio autoplay interaction required:', err);
                     });
                 }
             }
 
-            // Music Mute/Unmute Toggle Button
+            // Music Mute/Unmute Toggle
             if (musicToggle) {
                 musicToggle.addEventListener('click', () => {
                     if (isAudioPlaying) {
@@ -541,7 +543,61 @@
                 });
             }
 
-            // --- RED SMALL HEART ROPE PHYSICS ENGINE ---
+            // --- SPARKLE PARTICLE SYSTEM ---
+            const sparkles = [];
+
+            function spawnSparkle(x, y, isBurst = false) {
+                const count = isBurst ? 20 : 2;
+                const colors = ['#ffd700', '#ffffff', '#ff7675', '#f1c40f', '#ffb6c1'];
+
+                for (let i = 0; i < count; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = isBurst ? Math.random() * 6 + 2 : Math.random() * 2 + 0.5;
+                    sparkles.push({
+                        x: x + (Math.random() - 0.5) * 30,
+                        y: y + (Math.random() - 0.5) * 30,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed - (isBurst ? 1 : 0.5),
+                        size: Math.random() * 4 + 2,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        alpha: 1,
+                        decay: Math.random() * 0.02 + 0.015,
+                        rotation: Math.random() * Math.PI
+                    });
+                }
+            }
+
+            function updateAndDrawSparkles(ctx) {
+                for (let i = sparkles.length - 1; i >= 0; i--) {
+                    const p = sparkles[i];
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.alpha -= p.decay;
+
+                    if (p.alpha <= 0) {
+                        sparkles.splice(i, 1);
+                        continue;
+                    }
+
+                    ctx.save();
+                    ctx.globalAlpha = p.alpha;
+                    ctx.fillStyle = p.color;
+
+                    // Draw 4-point star sparkle shape
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation);
+                    ctx.beginPath();
+                    for (let j = 0; j < 4; j++) {
+                        ctx.rotate(Math.PI / 2);
+                        ctx.lineTo(0, p.size);
+                        ctx.lineTo(0, p.size * 0.3);
+                    }
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            // --- RED HEART ROPE PHYSICS & DRAG ENGINE ---
             if (canvas && overlay) {
                 const ctx = canvas.getContext('2d');
                 let width = 0, height = 0;
@@ -552,7 +608,8 @@
                 let targetOffsetY = 0;
                 let velocityY = 0;
 
-                const pullThreshold = 180; // Distance to pull down to unlock
+                // INCREASED PULL DISTANCE THRESHOLD FOR LONGER DOWNWARD TRAVEL SPACE
+                const pullThreshold = 280; 
 
                 function resize() {
                     width = canvas.width = window.innerWidth || document.documentElement.clientWidth || 800;
@@ -569,7 +626,8 @@
                 function onStart(e) {
                     const pos = getPointerPos(e);
                     const centerX = width / 2;
-                    if (Math.abs(pos.x - centerX) < 120 && pos.y > 0 && pos.y < height * 0.75) {
+                    // Expanded touch hit area around the heart ring
+                    if (Math.abs(pos.x - centerX) < 140 && pos.y > 0 && pos.y < height * 0.85) {
                         isDragging = true;
                         startDragY = pos.y - offsetY;
                     }
@@ -579,6 +637,13 @@
                     if (!isDragging) return;
                     const pos = getPointerPos(e);
                     targetOffsetY = Math.max(0, pos.y - startDragY);
+
+                    // Spawn magical sparkles as user drags heart down
+                    if (targetOffsetY > 10) {
+                        const cx = width / 2;
+                        const heartCenterY = 160 + offsetY;
+                        spawnSparkle(cx + (Math.random() - 0.5) * 50, heartCenterY + (Math.random() - 0.5) * 50);
+                    }
 
                     if (targetOffsetY > pullThreshold) {
                         revealWebsite();
@@ -590,7 +655,7 @@
                     targetOffsetY = 0;
                 }
 
-                // Generates smooth parametric points for a clean rope heart
+                // Smooth parametric equations for heart shape
                 function getHeartPoints(cx, cy, scale) {
                     const points = [];
                     const totalPoints = 60;
@@ -615,14 +680,14 @@
                     }
                     ctx.closePath();
 
-                    // Outer Crimson Red Rope
+                    // Outer Crimson Red Rope Strand
                     ctx.lineWidth = 10;
                     ctx.strokeStyle = '#c0392b';
                     ctx.lineCap = 'round';
                     ctx.lineJoin = 'round';
                     ctx.stroke();
 
-                    // Inner Bright Red Highlight Strand
+                    // Inner Soft Pink Highlight Strand
                     ctx.lineWidth = 3;
                     ctx.strokeStyle = '#ff7675';
                     ctx.stroke();
@@ -633,11 +698,11 @@
 
                     const cx = width / 2;
                     const topY = 0;
-                    // Smaller scale for compact red heart
+                    // Compact heart scale for elegant look
                     const scale = Math.min(width, height) < 600 ? 3.5 : 4.5;
-                    const heartCenterY = 160 + offsetY;
+                    const heartCenterY = 150 + offsetY;
 
-                    // 1. Top Hanging Ropes
+                    // 1. Top Hanging Ropes extending smoothly from top screen
                     ctx.beginPath();
                     ctx.moveTo(cx - 8, topY);
                     ctx.lineTo(cx - 8, heartCenterY - 14 * scale);
@@ -656,7 +721,7 @@
                     ctx.strokeStyle = '#ff7675';
                     ctx.stroke();
 
-                    // 2. Heart Shape Rope
+                    // 2. Heart Shaped Red Rope Body
                     const heartPoints = getHeartPoints(cx, heartCenterY, scale);
                     drawRopePath(heartPoints);
 
@@ -672,16 +737,16 @@
                     // 4. Bottom Knot & Pull Ring
                     const bottomHeartY = heartCenterY + 16 * scale;
                     
-                    // Rope tail
+                    // Rope tail extending down
                     ctx.beginPath();
                     ctx.moveTo(cx, bottomHeartY);
-                    ctx.lineTo(cx, bottomHeartY + 20);
+                    ctx.lineTo(cx, bottomHeartY + 22);
                     ctx.lineWidth = 8;
                     ctx.strokeStyle = '#c0392b';
                     ctx.stroke();
 
-                    // Gold Ring
-                    const ringY = bottomHeartY + 38;
+                    // Shining Gold Ring at bottom for pulling
+                    const ringY = bottomHeartY + 40;
                     ctx.beginPath();
                     ctx.arc(cx, ringY, 18, 0, Math.PI * 2);
                     ctx.fillStyle = '#d4af37';
@@ -694,6 +759,9 @@
                     ctx.arc(cx, ringY, 8, 0, Math.PI * 2);
                     ctx.fillStyle = '#111625';
                     ctx.fill();
+
+                    // Render active glittering sparkles on top
+                    updateAndDrawSparkles(ctx);
                 }
 
                 function animate() {
@@ -711,9 +779,16 @@
 
                 function revealWebsite() {
                     isDragging = false;
-                    overlay.classList.add('revealed');
-                    document.body.classList.remove('rope-locked');
-                    playMusic(); // Trigger romantic music playback when rope is pulled down!
+                    const cx = width / 2;
+                    const heartCenterY = 160 + offsetY;
+                    // Trigger dynamic golden sparkle burst when pulled down sufficiently!
+                    spawnSparkle(cx, heartCenterY, true);
+
+                    setTimeout(() => {
+                        overlay.classList.add('revealed');
+                        document.body.classList.remove('rope-locked');
+                        playMusic();
+                    }, 150);
                 }
 
                 window.addEventListener('resize', resize);
@@ -729,7 +804,7 @@
                 animate();
             }
 
-            // --- COUNTDOWN LOGIC ---
+            // --- COUNTDOWN TIMER ---
             const weddingDate = new Date("April 16, 2026 15:00:00").getTime();
             setInterval(function() {
                 const now = new Date().getTime();
@@ -748,7 +823,7 @@
                 }
             }, 1000);
 
-            // --- FLOATING PETALS LOGIC ---
+            // --- FLOATING PETALS ANIMATION ---
             function createPetal() {
                 const container = document.getElementById('petal-container');
                 if (!container) return;
@@ -763,7 +838,7 @@
             }
             setInterval(createPetal, 400);
 
-            // --- RSVP FORM LOGIC ---
+            // --- RSVP FORM HANDLING ---
             const rsvpForm = document.getElementById('rsvpForm');
             if (rsvpForm) {
                 rsvpForm.addEventListener('submit', function(e) {
