@@ -22,7 +22,7 @@
             box-sizing: border-box;
         }
 
-        body, html {
+        html, body {
             width: 100%;
             height: 100%;
             font-family: 'Lato', sans-serif;
@@ -36,52 +36,46 @@
             overflow: hidden !important;
         }
 
-        /* --- FULLSCREEN ROPE OVERLAY COVER --- */
+        /* --- FULLSCREEN OVERLAY COVER --- */
         #rope-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #111625;
-            z-index: 999999;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: #111625 !important;
+            z-index: 999999 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
         }
 
         #rope-overlay.revealed {
-            transform: translateY(-100vh);
-            opacity: 0;
-            pointer-events: none;
+            transform: translateY(-100vh) !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
         }
 
         .rope-instruction {
-            margin-top: 80px;
+            margin-top: 60px;
             color: #ffffff;
             font-family: 'Playfair Display', serif;
             font-size: 1.5rem;
             letter-spacing: 2px;
             text-align: center;
             pointer-events: none;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            animation: pulseText 2s infinite alternate;
+            z-index: 1000000;
         }
 
-        @keyframes pulseText {
-            0% { opacity: 0.6; transform: translateY(0); }
-            100% { opacity: 1; transform: translateY(-5px); }
-        }
-
-        /* Pull Rope Canvas */
+        /* Fullscreen Pull Canvas */
         #pull-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
             cursor: grab;
             touch-action: none;
         }
@@ -366,7 +360,7 @@
 
     <!-- OVERLAY WITH PULLABLE ROPE -->
     <div id="rope-overlay">
-        <div class="rope-instruction">Pull the rope down to open ☟</div>
+        <div class="rope-instruction">Pull the gold ring down to enter ☟</div>
         <canvas id="pull-canvas"></canvas>
     </div>
 
@@ -476,41 +470,40 @@
     <!-- Swiper JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-    <!-- ALL JAVASCRIPT -->
+    <!-- JAVASCRIPT -->
     <script>
-        window.addEventListener('load', () => {
-            // --- 1. DOWNWARD PULL ROPE PHYSICS LOGIC ---
+        function setupApp() {
+            // 1. PULL ROPE LOGIC
             const canvas = document.getElementById('pull-canvas');
             const overlay = document.getElementById('rope-overlay');
+
             if (canvas && overlay) {
                 const ctx = canvas.getContext('2d');
-                let width, height;
+                let width = 0, height = 0;
                 let isDragging = false;
 
-                // Physics points for the hanging rope
                 let points = [];
-                const numPoints = 25;
-                const ropeLength = 350; // Base length in px
+                const numPoints = 20;
+                let baseRopeLength = 320;
                 let currentPullY = 0;
-                const pullThreshold = 220; // How many px user pulls down to release
+                const pullThreshold = 180;
 
                 function resize() {
-                    width = canvas.width = window.innerWidth;
-                    height = canvas.height = window.innerHeight;
+                    width = canvas.width = window.innerWidth || document.documentElement.clientWidth || 800;
+                    height = canvas.height = window.innerHeight || document.documentElement.clientHeight || 600;
+                    baseRopeLength = Math.min(height * 0.5, 380);
                     initRope();
                 }
 
                 function initRope() {
                     points = [];
                     const startX = width / 2;
-                    const segmentLen = ropeLength / numPoints;
+                    const segmentLen = baseRopeLength / numPoints;
 
                     for (let i = 0; i <= numPoints; i++) {
                         points.push({
                             x: startX,
                             y: i * segmentLen,
-                            ox: startX,
-                            oy: i * segmentLen,
                             vx: 0,
                             vy: 0
                         });
@@ -527,9 +520,8 @@
                 function onStart(e) {
                     const pos = getPointer(e);
                     const handle = points[points.length - 1];
-                    // Check if click/tap is near the bottom handle ring
                     const dist = Math.hypot(pos.x - handle.x, pos.y - handle.y);
-                    if (dist < 80) {
+                    if (dist < 100) {
                         isDragging = true;
                     }
                 }
@@ -540,11 +532,10 @@
                     const handle = points[points.length - 1];
 
                     handle.x = pos.x;
-                    handle.y = Math.max(pos.y, ropeLength); // Only allow pulling downward
+                    handle.y = Math.max(pos.y, baseRopeLength);
 
-                    currentPullY = handle.y - ropeLength;
+                    currentPullY = handle.y - baseRopeLength;
 
-                    // Trigger reveal when pulled down past threshold
                     if (currentPullY > pullThreshold) {
                         revealWebsite();
                     }
@@ -560,7 +551,6 @@
                     const damping = 0.75;
                     const startX = width / 2;
 
-                    // Anchor the top of the rope to top-center of page
                     points[0].x = startX;
                     points[0].y = 0;
 
@@ -568,9 +558,8 @@
                         const p = points[i];
                         if (i === points.length - 1 && isDragging) continue;
 
-                        // Spring back to resting vertical line
                         const targetX = startX;
-                        const targetY = (i / numPoints) * ropeLength;
+                        const targetY = (i / numPoints) * baseRopeLength;
 
                         p.vx = (p.vx + (targetX - p.x) * stiffness) * damping;
                         p.vy = (p.vy + (targetY - p.y) * stiffness) * damping;
@@ -583,37 +572,36 @@
                 function drawRope() {
                     ctx.clearRect(0, 0, width, height);
 
-                    // Draw Rope Body
+                    // Draw Rope Line
                     ctx.beginPath();
                     ctx.moveTo(points[0].x, points[0].y);
                     for (let i = 1; i < points.length; i++) {
                         ctx.lineTo(points[i].x, points[i].y);
                     }
                     ctx.lineWidth = 14;
-                    ctx.strokeStyle = '#d4af37'; // Gold rope
+                    ctx.strokeStyle = '#d4af37';
                     ctx.lineCap = 'round';
                     ctx.lineJoin = 'round';
                     ctx.stroke();
 
-                    // Inner Highlight Thread
+                    // Inner Highlight Line
                     ctx.lineWidth = 4;
                     ctx.strokeStyle = '#ffffff';
                     ctx.stroke();
 
-                    // Draw Handle Ring/Knob at bottom end
+                    // Draw Bottom Gold Ring
                     const handle = points[points.length - 1];
                     ctx.beginPath();
-                    ctx.arc(handle.x, handle.y, 22, 0, Math.PI * 2);
+                    ctx.arc(handle.x, handle.y, 25, 0, Math.PI * 2);
                     ctx.fillStyle = '#d4af37';
                     ctx.fill();
-                    ctx.lineWidth = 4;
+                    ctx.lineWidth = 5;
                     ctx.strokeStyle = '#ffffff';
                     ctx.stroke();
 
-                    // Inner decorative core of handle
                     ctx.beginPath();
-                    ctx.arc(handle.x, handle.y, 8, 0, Math.PI * 2);
-                    ctx.fillStyle = '#ffffff';
+                    ctx.arc(handle.x, handle.y, 10, 0, Math.PI * 2);
+                    ctx.fillStyle = '#111625';
                     ctx.fill();
                 }
 
@@ -642,7 +630,7 @@
                 animate();
             }
 
-            // --- 2. COUNTDOWN LOGIC ---
+            // 2. COUNTDOWN LOGIC
             const weddingDate = new Date("April 16, 2026 15:00:00").getTime();
             setInterval(function() {
                 const now = new Date().getTime();
@@ -661,51 +649,8 @@
                 }
             }, 1000);
 
-            // --- 3. SWIPER SLIDER LOGIC ---
+            // 3. SWIPER LOGIC
             new Swiper('.swiper', {
                 effect: 'coverflow',
                 grabCursor: true,
-                centeredSlides: true,
-                slidesPerView: 'auto',
-                coverflowEffect: {
-                    rotate: 50,
-                    stretch: 0,
-                    depth: 100,
-                    modifier: 1,
-                    slideShadows: true,
-                },
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                },
-            });
-
-            // --- 4. FLOATING PETALS LOGIC ---
-            function createPetal() {
-                const container = document.getElementById('petal-container');
-                if (!container) return;
-                const petal = document.createElement('div');
-                petal.className = 'petal';
-                petal.style.left = Math.random() * 100 + 'vw';
-                petal.style.width = Math.random() * 15 + 10 + 'px';
-                petal.style.height = petal.style.width;
-                petal.style.animationDuration = Math.random() * 5 + 7 + 's';
-                container.appendChild(petal);
-                setTimeout(() => { petal.remove(); }, 12000);
-            }
-            setInterval(createPetal, 400);
-
-            // --- 5. RSVP FORM HANDLER ---
-            const rsvpForm = document.getElementById('rsvpForm');
-            if (rsvpForm) {
-                rsvpForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const name = document.getElementById('name').value;
-                    alert('Thank you, ' + name + '! We have received your RSVP.');
-                    rsvpForm.reset();
-                });
-            }
-        });
-    </script>
-</body>
-</html>
+                centeredSlides:
