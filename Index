@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Wedding Day</title>
 
-    <!-- Google Fonts & Swiper CSS -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
     <style>
         :root {
             --primary-gold: #d4af37;
@@ -25,7 +21,7 @@
         html, body {
             width: 100%;
             height: 100%;
-            font-family: 'Lato', sans-serif;
+            font-family: Georgia, 'Times New Roman', serif;
             color: var(--text-dark);
             background-color: var(--soft-white);
             scroll-behavior: smooth;
@@ -36,7 +32,7 @@
             overflow: hidden !important;
         }
 
-        /* --- FULLSCREEN OVERLAY COVER --- */
+        /* --- PULL ROPE FULLSCREEN OVERLAY --- */
         #rope-overlay {
             position: fixed !important;
             top: 0 !important;
@@ -61,7 +57,6 @@
         .rope-instruction {
             margin-top: 60px;
             color: #ffffff;
-            font-family: 'Playfair Display', serif;
             font-size: 1.5rem;
             letter-spacing: 2px;
             text-align: center;
@@ -69,7 +64,6 @@
             z-index: 1000000;
         }
 
-        /* Fullscreen Pull Canvas */
         #pull-canvas {
             position: absolute !important;
             top: 0 !important;
@@ -100,7 +94,6 @@
         }
 
         .hero h1 {
-            font-family: 'Playfair Display', serif;
             font-size: clamp(2.5rem, 8vw, 5rem);
             margin-bottom: 0.5rem;
             font-style: italic;
@@ -109,7 +102,6 @@
 
         .hero .subtitle {
             font-size: clamp(1rem, 3vw, 1.5rem);
-            font-family: 'Playfair Display', serif;
             margin-bottom: 2rem;
             font-weight: 300;
         }
@@ -156,7 +148,6 @@
         }
 
         h2 {
-            font-family: 'Playfair Display', serif;
             font-size: clamp(2rem, 5vw, 2.8rem);
             color: var(--primary-gold);
             margin-bottom: 40px;
@@ -192,7 +183,6 @@
         .time-box span {
             display: block;
             font-size: 2.5rem;
-            font-family: 'Playfair Display', serif;
             font-weight: bold;
             color: var(--primary-gold);
         }
@@ -243,7 +233,6 @@
         }
 
         .location-card h3 {
-            font-family: 'Playfair Display', serif;
             color: var(--primary-gold);
             margin-bottom: 10px;
             font-size: 1.6rem;
@@ -283,7 +272,6 @@
 
         .mini-moment-label {
             padding: 15px;
-            font-family: 'Playfair Display', serif;
             font-size: clamp(0.9rem, 2vw, 1.1rem); 
             color: var(--text-dark);
             background: white;
@@ -291,21 +279,25 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
 
+        /* --- PHOTO GALLERY GRID --- */
         #gallery {
             background: #f9f7f4;
             width: 100%;
         }
 
-        .swiper-slide {
-            width: 300px;
-            height: 400px;
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
         }
 
-        .swiper-slide img {
+        .gallery-grid img {
             width: 100%;
-            height: 100%;
+            height: 280px;
             object-fit: cover;
-            border-radius: 15px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
 
         .rsvp-form {
@@ -324,7 +316,6 @@
             margin: 12px 0;
             border: 1px solid #e1e1e1;
             border-radius: 8px;
-            font-family: 'Lato', sans-serif;
             font-size: 1rem;
             outline: none;
         }
@@ -337,7 +328,6 @@
             color: white;
             border: none;
             border-radius: 8px;
-            font-family: 'Lato', sans-serif;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
@@ -425,27 +415,24 @@
     <!-- GALLERY SECTION -->
     <section id="gallery">
         <h2>Captured Moments</h2>
-        <div class="swiper">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide"><img src="wedding (1).jpeg" alt="Moment 1"></div>
-                <div class="swiper-slide"><img src="wedding (2).jpeg" alt="Moment 2"></div>
-                <div class="swiper-slide"><img src="wedding (3).jpeg" alt="Moment 3"></div>
-                <div class="swiper-slide"><img src="wedding (4).jpeg" alt="Moment 4"></div>
-                <div class="swiper-slide"><img src="wedding (5).jpeg" alt="Moment 5"></div>
-                <div class="swiper-slide"><img src="wedding (6).jpeg" alt="Moment 6"></div>
-                <div class="swiper-slide"><img src="wedding (7).jpeg" alt="Moment 7"></div>
-                <div class="swiper-slide"><img src="wedding (8).jpeg" alt="Moment 8"></div>
-                <div class="swiper-slide"><img src="wedding (9).jpeg" alt="Moment 9"></div>
-                <div class="swiper-slide"><img src="wedding (10).jpeg" alt="Moment 10"></div>
-                <div class="swiper-slide"><img src="wedding (11).jpeg" alt="Moment 11"></div>
-                <div class="swiper-slide"><img src="wedding (12).jpeg" alt="Moment 12"></div>
-                <div class="swiper-slide"><img src="wedding (13).jpeg" alt="Moment 13"></div>
-                <div class="swiper-slide"><img src="wedding (14).jpeg" alt="Moment 14"></div>
-                <div class="swiper-slide"><img src="wedding (15).jpeg" alt="Moment 15"></div>
-                <div class="swiper-slide"><img src="wedding (16).jpeg" alt="Moment 16"></div>
-                <div class="swiper-slide"><img src="wedding (17).jpeg" alt="Moment 17"></div>
-            </div>
-            <div class="swiper-pagination"></div>
+        <div class="gallery-grid">
+            <img src="wedding (1).jpeg" alt="Moment 1">
+            <img src="wedding (2).jpeg" alt="Moment 2">
+            <img src="wedding (3).jpeg" alt="Moment 3">
+            <img src="wedding (4).jpeg" alt="Moment 4">
+            <img src="wedding (5).jpeg" alt="Moment 5">
+            <img src="wedding (6).jpeg" alt="Moment 6">
+            <img src="wedding (7).jpeg" alt="Moment 7">
+            <img src="wedding (8).jpeg" alt="Moment 8">
+            <img src="wedding (9).jpeg" alt="Moment 9">
+            <img src="wedding (10).jpeg" alt="Moment 10">
+            <img src="wedding (11).jpeg" alt="Moment 11">
+            <img src="wedding (12).jpeg" alt="Moment 12">
+            <img src="wedding (13).jpeg" alt="Moment 13">
+            <img src="wedding (14).jpeg" alt="Moment 14">
+            <img src="wedding (15).jpeg" alt="Moment 15">
+            <img src="wedding (16).jpeg" alt="Moment 16">
+            <img src="wedding (17).jpeg" alt="Moment 17">
         </div>
     </section>
 
@@ -467,13 +454,10 @@
         <p>Created with Love &copy; 2026</p>
     </footer>
 
-    <!-- Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
     <!-- JAVASCRIPT -->
     <script>
-        function setupApp() {
-            // 1. PULL ROPE LOGIC
+        (function initWebsite() {
+            // 1. PULL ROPE OVERLAY LOGIC
             const canvas = document.getElementById('pull-canvas');
             const overlay = document.getElementById('rope-overlay');
 
@@ -484,14 +468,14 @@
 
                 let points = [];
                 const numPoints = 20;
-                let baseRopeLength = 320;
+                let baseRopeLength = 300;
                 let currentPullY = 0;
-                const pullThreshold = 180;
+                const pullThreshold = 160;
 
                 function resize() {
-                    width = canvas.width = window.innerWidth || document.documentElement.clientWidth || 800;
-                    height = canvas.height = window.innerHeight || document.documentElement.clientHeight || 600;
-                    baseRopeLength = Math.min(height * 0.5, 380);
+                    width = canvas.width = window.innerWidth || 800;
+                    height = canvas.height = window.innerHeight || 600;
+                    baseRopeLength = Math.min(height * 0.45, 350);
                     initRope();
                 }
 
@@ -572,7 +556,7 @@
                 function drawRope() {
                     ctx.clearRect(0, 0, width, height);
 
-                    // Draw Rope Line
+                    // Draw Rope Body
                     ctx.beginPath();
                     ctx.moveTo(points[0].x, points[0].y);
                     for (let i = 1; i < points.length; i++) {
@@ -584,12 +568,12 @@
                     ctx.lineJoin = 'round';
                     ctx.stroke();
 
-                    // Inner Highlight Line
+                    // Inner Highlight Thread
                     ctx.lineWidth = 4;
                     ctx.strokeStyle = '#ffffff';
                     ctx.stroke();
 
-                    // Draw Bottom Gold Ring
+                    // Draw Ring Handle at Bottom
                     const handle = points[points.length - 1];
                     ctx.beginPath();
                     ctx.arc(handle.x, handle.y, 25, 0, Math.PI * 2);
@@ -649,8 +633,32 @@
                 }
             }, 1000);
 
-            // 3. SWIPER LOGIC
-            new Swiper('.swiper', {
-                effect: 'coverflow',
-                grabCursor: true,
-                centeredSlides:
+            // 3. FLOATING PETALS LOGIC
+            function createPetal() {
+                const container = document.getElementById('petal-container');
+                if (!container) return;
+                const petal = document.createElement('div');
+                petal.className = 'petal';
+                petal.style.left = Math.random() * 100 + 'vw';
+                petal.style.width = Math.random() * 15 + 10 + 'px';
+                petal.style.height = petal.style.width;
+                petal.style.animationDuration = Math.random() * 5 + 7 + 's';
+                container.appendChild(petal);
+                setTimeout(() => { petal.remove(); }, 12000);
+            }
+            setInterval(createPetal, 400);
+
+            // 4. RSVP FORM
+            const rsvpForm = document.getElementById('rsvpForm');
+            if (rsvpForm) {
+                rsvpForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const name = document.getElementById('name').value;
+                    alert('Thank you, ' + name + '! We have received your RSVP.');
+                    rsvpForm.reset();
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
